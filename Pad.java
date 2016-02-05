@@ -1,15 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-
-
 import java.io.*;
-
-
 import java.awt.event.*;
-
 import java.util.*;
-public class Tab implements ActionListener
+public class Pad implements ActionListener
 {
 	JFrame f;
 	JTabbedPane tb;
@@ -20,7 +15,7 @@ public class Tab implements ActionListener
 	JMenuBar mb;
 	JMenu file,search,settings;
 	JMenuItem open,New,saveas;
-	public Tab()
+	public Pad()
 	{
 		f=new JFrame("pane");
 
@@ -42,6 +37,7 @@ public class Tab implements ActionListener
 		 New=new JMenuItem("new");
 		 New.addActionListener(this);
 		 saveas=new JMenuItem("Save as");
+		 saveas.addActionListener(this);
 		 file.add(saveas);
 		 file.add(open);
 		 file.add(New);
@@ -57,17 +53,23 @@ public class Tab implements ActionListener
 
 		f.add(tb);
 
-		f.setSize(600,600);
+		f.setSize(800,800);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 			}
 		public void actionPerformed(ActionEvent e)
 		{
+			if(e.getSource()==saveas)
+			{
+				//a.setText("save");
+				
+				CreateTextField ct=new CreateTextField();
+				return;
+
+			}
           gen=makeTextPanel();
           counter++;
           tb.addTab("tab"+counter,gen);
-
-
 		}
 
 	protected JComponent makeTextPanel() {
@@ -82,6 +84,46 @@ public class Tab implements ActionListener
 }
 	public static void main(String s[])
 	{
-		new Tab();
+		new Pad();
+	}
+	//second class to create dialog box
+	class CreateTextField implements ActionListener
+	{
+		JFrame f2;
+		JTextField tf;
+		JButton b;JLabel l;
+        FileWriter fw;
+		public CreateTextField()
+		{
+			f2=new JFrame("save as");
+			tf=new JTextField(10);
+            tf.setBounds(150,40,200,30);
+			b=new JButton("save");
+			b.addActionListener(this);
+			b.setBounds(200,300,100,20);
+			l=new JLabel();
+			l.setText("Enter file name");
+			l.setBounds(5,40,120,20);
+			f2.add(l);
+			f2.add(tf);
+			f2.add(b);
+			f2.setSize(400,400);
+			f2.setLayout(null);
+			f2.setVisible(true);
+
+
+		}
+		public void actionPerformed(ActionEvent ae)
+		{
+		//	String x=tf.getText();
+          try{ fw=new FileWriter(tf.getText());
+            fw.write(a.getText());
+            fw.close();
+            f2.setVisible(false);
+        }catch(Exception e)
+        {
+        	System.out.println(e);
+        }
+		}
 	}
 }
