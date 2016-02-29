@@ -1,13 +1,17 @@
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.plaf.metal.*;
+import javax.swing.plaf.*;
 
 import java.awt.*;
+import java.awt.Color;
+
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.awt.event.*;
 import java.util.*;
-public class Pad implements ActionListener
+public class Padd implements ActionListener
 {
 	JFrame f;
 	JTabbedPane tb;
@@ -18,21 +22,23 @@ public class Pad implements ActionListener
 	JMenuBar mb;
 	JMenu file,search,settings;
 	JMenuItem open,New,saveas;
-	public Pad()
+	public Padd()
 	{
 		f=new JFrame("pane");
 
 		tb=new JTabbedPane();
 		c1=makeTextPanel();
+		// tb.setUI(new CustomTabbedPaneUI());
+
+		// addWindowListener(new WindowAdapter() {
+  //        public void windowClosing(WindowEvent we) {
+  //           System.exit(0);
+  //        }
+  //     });
 		
-		//c1.add(a1);
 		tb.setTabPlacement(SwingConstants.TOP);
 		tb.addTab("tab1",c1);
-		//c2=makeTextPanel();
-		//a2=new JTextArea(20,20);
-		//c2.add(a2);
-		//tb.addTab("tab2",c2);
-
+		
          mb=new JMenuBar();
          file=new JMenu("file");
 		 search=new JMenu("search");
@@ -65,7 +71,7 @@ public class Pad implements ActionListener
 		{
 			if(e.getSource()==saveas)
 			{
-				//a.setText("save");
+			
 				
 				CreateTextField ct=new CreateTextField();
 				return;
@@ -73,7 +79,7 @@ public class Pad implements ActionListener
 			}
           gen=makeTextPanel();
           counter++;
-          tb.addTab("tab"+counter,gen);
+          tb.addTab("tab"+counter,gen); 
 		}
 
 protected JComponent makeTextPanel() 
@@ -84,28 +90,34 @@ protected JComponent makeTextPanel()
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
     panel.add(filler);panel.setBorder(new TitledBorder(new EtchedBorder()));
     a=new JTextArea(20,20);
+    a.setBackground(Color.WHITE);
+    a.setForeground(Color.BLACK);
+
+    Font font = new Font("Serif", Font.PLAIN, 20);
+        a.setFont(font);
 
    jsp= new JScrollPane(a);
     jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 
-    // panel.add(a);
+    
     panel.add(jsp);
-   // setBackgroundAt(counter-1,
-                           // Color.red);
+  
     return panel;
 }
 	public static void main(String s[])
 	{
-		new Pad();
+		new Padd();
 	}
-	//second class to create dialog box
+
+	//second class to create dialog box for "Saveas dialog box"
 	class CreateTextField implements ActionListener
 	{
 		JFrame f2;
 		JTextField tf;
 		JButton b,cancel;JLabel l;
-        FileWriter fw;
+        // FileWriter fw;
+        FileOutputStream fos;
 		public CreateTextField()
 		{
 			f2=new JFrame("save as");
@@ -113,10 +125,10 @@ protected JComponent makeTextPanel()
             tf.setBounds(150,40,200,30);
 			b=new JButton("save");
 			b.addActionListener(this);
-			b.setBounds(100,300,100,20);
+			b.setBounds(100,300,100,40);
 			cancel=new JButton("Cancel");
 			cancel.addActionListener(this);
-			cancel.setBounds(250,300,100,20);
+			cancel.setBounds(250,300,100,40);
 			l=new JLabel();
 			l.setText("Enter file name");
 			l.setBounds(5,40,120,20);
@@ -134,11 +146,17 @@ protected JComponent makeTextPanel()
 		//	String x=tf.getText();
 			if(ae.getSource()==b)
 			{
-          try{ fw=new FileWriter(tf.getText());
-            fw.write(a.getText());
-            fw.close();
+          try{ 
+				// fw=new FileWriter(tf.getText());
+				fos=new FileOutputStream(new File(tf.getText()));
+				byte bt[]=a.getText().getBytes();
+				for(int i=0;i<bt.length;i++)
+					fos.write(bt[i]);
+				fos.close();
+            // fw.write(a.getText());
+            // fw.close();
             f2.setVisible(false);
-        }catch(Exception e)
+        }catch(IOException e)
         {
         	System.out.println(e);
         }
@@ -150,3 +168,4 @@ protected JComponent makeTextPanel()
 	    }
 }
 }
+
